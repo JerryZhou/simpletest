@@ -70,6 +70,7 @@ enum {
 #else
 #define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
 #endif
+
 struct timezone
 {
     int  tz_minuteswest; /* minutes W of Greenwich */
@@ -484,12 +485,14 @@ typedef struct SimpleTestSuiteStruct
   struct SimpleTestStruct* m_head;
   const char* m_name;
   struct SimpleTestStruct* m_headTest;
+  struct SimpleTestStruct* m_tailTest;
   struct SimpleTestSuiteStruct* m_next;
 } SimpleTestSuite;
 
 typedef struct SimpleTestRegistryStruct
 {
   SimpleTestSuite* m_headSuite;
+  SimpleTestSuite* m_tailSuite;
 } SimpleTestRegistry;
 
 typedef void (*SimpleTestSuiteFunc)(SimpleTestRegistry* registry);
@@ -557,8 +560,14 @@ static SimpleTestRegistry* globalRegistry()
 
 static ST_BOOL addTestSuite(SimpleTestSuite *suite)
 {
-    suite->m_next = globalRegistry()->m_headSuite;
-    globalRegistry()->m_headSuite = suite;
+    suite->m_next = NULL;
+    if (globalRegistry()->m_tailSuite) {
+        globalRegistry()->m_tailSuite->m_next = suite;
+    }
+    globalRegistry()->m_tailSuite = suite;
+    if (!globalRegistry()->m_headSuite) {
+        globalRegistry()->m_headSuite = suite;
+    }
     return ST_TRUE;
 }
 
@@ -567,9 +576,18 @@ static ST_BOOL addTestSuiteCase(SimpleTestSuite *suite, SimpleTestFunc func, con
     SimpleTest* testDecl = (SimpleTest*)malloc(sizeof(SimpleTest));
     testDecl->m_func = func;
     testDecl->m_name = name;
-    testDecl->m_next = suite->m_headTest;
     testDecl->m_result = 0;
-    suite->m_headTest = testDecl;
+    testDecl->m_next = NULL;
+    
+    if (suite->m_tailTest) {
+        suite->m_tailTest->m_next = testDecl;
+    }
+    
+    suite->m_tailTest = testDecl;
+    
+    if (!suite->m_headTest) {
+        suite->m_headTest = testDecl;
+    }
     return ST_TRUE;
 }
 
@@ -633,6 +651,7 @@ void Suite##suiteName(SimpleTestRegistry* registry)                     \
   SimpleTestSuite* suite = (SimpleTestSuite*)malloc(sizeof(SimpleTestSuite)); \
   suite->m_name = #suiteName;                                           \
   suite->m_headTest = NULL;                                             \
+  suite->m_tailTest = NULL;                                             \
   suite->m_next = NULL
   
 #define SIMPLETEST_ADD_TEST(test)                                       \
@@ -653,7 +672,8 @@ void Suite##suiteName(SimpleTestRegistry* registry)                     \
   {                                                                     \
     SimpleTestRegistry objRegistry;                                     \
     SimpleTestRegistry* registry = &objRegistry;                        \
-    registry->m_headSuite = NULL
+    registry->m_headSuite = NULL;                                       \
+    registry->m_tailSuite = NULL
 
 #define SIMPLETEST_RUN_SUITE(suiteName)                                 \
   Suite##suiteName(&registry) 
@@ -689,6 +709,7 @@ SimpleTestSuite* TinySuit_##suiteName()                                 \
     suite = (SimpleTestSuite*)malloc(sizeof(SimpleTestSuite));          \
     suite->m_name = #suiteName;                                         \
     suite->m_headTest = NULL;                                           \
+    suite->m_tailTest = NULL;                                           \
     suite->m_next = NULL;                                               \
     }                                                                   \
     return suite;                                                       \

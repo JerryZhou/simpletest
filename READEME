@@ -24,4 +24,5 @@ runAllTest();
 Run Example On Mac:
 g++ main.cpp
 
-
+3. NB!!
+should add preprocessor _CRT_SECURE_NO_DEPRECATE when use in windows
