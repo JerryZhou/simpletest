@@ -1,0 +1,27 @@
+Simple unit testing for c/c++
+Copyright Jerryzhou@outlook.com
+Licence: Apache 2.0
+
+Purpose: facilitate the unit testing for programs written in c/c++, 
+    simple, tiny and easy to use, 
+    the whole unit test framework is just one .h file
+
+Please see examples for more details.
+
+1. Use:
+
+SIMPLETEST_SUIT(suit);
+SIMPLETEST_CASE(suit, case)
+{
+    SIMPLETEST_EQUAL(1, 1);
+    SIMPLETEST_EQUAL(2, 1);
+}
+
+run all the test just call:
+runAllTest();
+
+2. Tutorials
+Run Example On Mac:
+g++ main.cpp
+
+
