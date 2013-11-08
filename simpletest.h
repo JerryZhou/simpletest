@@ -3,6 +3,7 @@
     Copyright Jerryzhou@outlook.com
     Licence: Apache 2.0
 
+    Project: https://github.com/JerryZhou/simpletest.git
     Purpose: facilitate the unit testing for programs written in c/c++, 
         simple, tiny and easy to use, 
         the whole unit test framework is just one .h file
