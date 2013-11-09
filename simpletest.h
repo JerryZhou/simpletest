@@ -217,33 +217,33 @@ const char* posixGetEnv(const char* name) {
 
 #if SIMPLETEST_OS_WINDOWS
 # ifdef __BORLANDC__
-inline int posixIsATTY(int fd) { return isatty(fd); }
-inline int posixStrCaseCmp(const char* s1, const char* s2) {
+static inline int posixIsATTY(int fd) { return isatty(fd); }
+static inline int posixStrCaseCmp(const char* s1, const char* s2) {
     return stricmp(s1, s2);
 }
 # else  // !__BORLANDC__
 #  if SIMPLETEST_OS_WINDOWS_MOBILE
-inline int posixIsATTY(int /* fd */) { return 0; }
+static inline int posixIsATTY(int /* fd */) { return 0; }
 #  else
-inline int posixIsATTY(int fd) { return _isatty(fd); }
+static inline int posixIsATTY(int fd) { return _isatty(fd); }
 #  endif  // SIMPLETEST_OS_WINDOWS_MOBILE
-inline int posixStrCaseCmp(const char* s1, const char* s2) {
+static inline int posixStrCaseCmp(const char* s1, const char* s2) {
     return _stricmp(s1, s2);
 }
 # endif  // __BORLANDC__
 # if SIMPLETEST_OS_WINDOWS_MOBILE
-inline int posixFileNo(FILE* file) { return reinterpret_cast<int>(_fileno(file)); }
+static inline int posixFileNo(FILE* file) { return reinterpret_cast<int>(_fileno(file)); }
 // Stat(), RmDir(), and IsDir() are not needed on Windows CE at this
 // time and thus not defined there.
 # else
-inline int posixFileNo(FILE* file) { return _fileno(file); }
+static inline int posixFileNo(FILE* file) { return _fileno(file); }
 # endif  // SIMPLETEST_OS_WINDOWS_MOBILE
 #else
-inline int posixStrCaseCmp(const char* s1, const char* s2) {
+static inline int posixStrCaseCmp(const char* s1, const char* s2) {
     return strcasecmp(s1, s2);
 }
-inline int posixFileNo(FILE* file) { return fileno(file); }
-inline int posixIsATTY(int fd) { return isatty(fd); }
+static inline int posixFileNo(FILE* file) { return fileno(file); }
+static inline int posixIsATTY(int fd) { return isatty(fd); }
 #endif  // SIMPLETEST_OS_WINDOWS
 
 // Compares two C strings, ignoring case.  Returns true iff they have
@@ -348,8 +348,10 @@ void ColoredPrintf(SimpleTestColor color, const char* fmt, ...) {
 #if SIMPLETEST_OS_WINDOWS_MOBILE || SIMPLETEST_OS_SYMBIAN || SIMPLETEST_OS_ZOS || SIMPLETEST_OS_IOS
     const ST_BOOL use_color = ST_FALSE;
 #else
-    static ST_BOOL in_color_mode =
-    ShouldUseColor(posixIsATTY(posixFileNo(stdout)) != 0);
+    static ST_BOOL in_color_mode = -1;
+    if(in_color_mode == -1){
+	in_color_mode =	ShouldUseColor(posixIsATTY(posixFileNo(stdout)) != 0);
+    }
     const ST_BOOL use_color = in_color_mode && (color != COLOR_DEFAULT);
 #endif  // SIMPLETEST_OS_WINDOWS_MOBILE || SIMPLETEST_OS_SYMBIAN || SIMPLETEST_OS_ZOS
     // The '!= 0' comparison is necessary to satisfy MSVC 7.1.
