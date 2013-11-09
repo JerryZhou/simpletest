@@ -762,11 +762,11 @@ SIMPLETEST_CASE_DECLARE(suiteName, testCase)
 #define SP_CASE SIMPLETEST_CASE
 
 #define SP_EQUAL_MSG SIMPLETEST_EQUAL_MSG
-#define SP_EQUAL(expected, actual)  
-#define SP_STR_EQUAL_MSG(expected, actual, msg) 
-#define SP_STR_EQUAL(expected, actual) 
-#define SP_ASSERT_MSG(assertion, msg) 
-#define SP_ASSERT(assertion) 
+#define SP_EQUAL SIMPLETEST_EQUAL  
+#define SP_STR_EQUAL_MSG SIMPLETEST_STR_EQUAL_MSG 
+#define SP_STR_EQUAL SIMPLETEST_STR_EQUAL 
+#define SP_ASSERT_MSG SIMPLETEST_ASSERT_MSG 
+#define SP_ASSERT SIMPLETEST_ASSERT 
 
 #endif
 
