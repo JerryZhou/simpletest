@@ -610,7 +610,7 @@ static void runAllTest()
   if ( (expected) != (actual) )                                         \
   {                                                                     \
     const char* _msg = (msg);                                           \
-    TEST_LOG_ERROR("%s:%d expected %s, actual: %s %s%s%s\n",            \
+    TEST_LOG_ERROR("%s:%d expected %s, actual: %s %s%s%s",              \
            __FILE__, __LINE__, #expected, #actual,                      \
            _msg ? "(":"", _msg ? _msg : "", _msg ? ")":"");             \
     SIMPLETEST_ERROR();                                                 \
@@ -623,7 +623,7 @@ static void runAllTest()
   if ( strcmp((expected), (actual)) )                                   \
   {                                                                     \
     const char* _msg = (msg);                                           \
-    TEST_LOG_ERROR("%s:%d expected \"%s\", actual: \"%s\"%s%s%s\n",     \
+    TEST_LOG_ERROR("%s:%d expected \"%s\", actual: \"%s\"%s%s%s",       \
            __FILE__, __LINE__, expected, actual,                        \
            _msg ? "(":"", _msg ? _msg : "", _msg ? ")":"");             \
     SIMPLETEST_ERROR();                                                 \
@@ -636,7 +636,7 @@ static void runAllTest()
   if ( !(assertion) )                                                   \
   {                                                                     \
     const char* _msg = (msg);                                           \
-    TEST_LOG_ERROR("%s:%d assertion failed: \"%s\"%s%s%s\n",            \
+    TEST_LOG_ERROR("%s:%d assertion failed: \"%s\"%s%s%s",              \
            __FILE__, __LINE__, #assertion,                              \
            _msg ? "(":"", _msg ? _msg : "", _msg ? ")":"");             \
     SIMPLETEST_ERROR();                                                 \
@@ -757,6 +757,16 @@ SIMPLETEST_CASE_DECLARE(suiteName, testCase)
 #define SIMPLETEST_CASE_ADD(suiteName, testCase)
 #define SIMPLETEST_CASE(suiteName, testCase)
 #endif // SIMPLETEST_NOTESTING
+
+#define SP_SUIT SIMPLETEST_SUIT 
+#define SP_CASE SIMPLETEST_CASE
+
+#define SP_EQUAL_MSG SIMPLETEST_EQUAL_MSG
+#define SP_EQUAL(expected, actual)  
+#define SP_STR_EQUAL_MSG(expected, actual, msg) 
+#define SP_STR_EQUAL(expected, actual) 
+#define SP_ASSERT_MSG(assertion, msg) 
+#define SP_ASSERT(assertion) 
 
 #endif
 
