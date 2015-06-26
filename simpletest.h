@@ -31,6 +31,12 @@
 #ifndef __SIMPLETEST_H__
 #define __SIMPLETEST_H__
 
+#ifdef WIN32
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif // _CRT_SECURE_NO_WARNINGS 
+#endif // WIN32
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
